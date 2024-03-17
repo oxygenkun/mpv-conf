@@ -31,4 +31,4 @@ From: [po5/thumbfast](https://github.com/po5/thumbfast)
 
 ## Reference
 
-- [hooke007/MPV_lazy](https://github.com/hooke007/MPV_lazy) is a easy to use one-step-install config repo, with a doc site including MPV wiki and some config tricks.
+- [hooke007/MPV_lazy](https://github.com/hooke007/MPV_lazy) is an easy to use one-step-install config repo, with a doc site including MPV wiki and some config tricks.
