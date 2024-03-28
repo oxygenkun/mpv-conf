@@ -6,27 +6,26 @@ This is my personal mpv player's configrations. Feel free to use.
 
 ### autoload
 
-Function: 
 playlist **autoload**.
 
 From: mpv's [official repo](https://github.com/mpv-player/mpv/blob/master/TOOLS/lua/autoload.lua).
 
 ### uosc
 
-Function: an elegent and useful **GUI** (specific term is On Screen Controller, OSC) with some utils.
+an elegent and useful **GUI** (specific term is On Screen Controller, OSC) with some utils.
 
 From: [tomasklaen/uosc](https://github.com/tomasklaen/uosc)
 
 
 ### thumbfast
 
-Function: show **thumbnails** on the progress bar.
+show **thumbnails** on the progress bar.
 
 From: [po5/thumbfast](https://github.com/po5/thumbfast)
 
 ### VR-reversal 360plugin
 
-Function: convert **VR** video to 2d video with control.
+convert **VR** video to 2d video with control.
 
 From: [dfaker/VR-reversal](https://github.com/dfaker/VR-reversal)
 
@@ -42,6 +41,19 @@ y Increase resolution
 h decrease resolution
 
 i,k,j,l up,down,left,right
+```
+
+### trim
+
+Cut video without decoding/encoding
+
+From: [aerobounce/trim.lua](https://github.com/aerobounce/trim.lua)
+
+```
+h for start position
+k for end position
+
+duble press h/k for cutting
 ```
 
 ### personal miscs
