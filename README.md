@@ -24,6 +24,26 @@ Function: show **thumbnails** on the progress bar.
 
 From: [po5/thumbfast](https://github.com/po5/thumbfast)
 
+### VR-reversal 360plugin
+
+Function: convert **VR** video to 2d video with control.
+
+From: [dfaker/VR-reversal](https://github.com/dfaker/VR-reversal)
+
+```bash
+mpv --script=360plugin.lua --script-opts=360plugin-enabled=yes videoFile.mp4
+```
+
+```
+? for help
+v to toggle the main feature on or off.
+
+y Increase resolution
+h decrease resolution
+
+i,k,j,l up,down,left,right
+```
+
 ### personal miscs
 
 -  `helpers.bash`: dvd and bd playing helpers
