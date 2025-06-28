@@ -6,17 +6,56 @@
 --  Created by github.com/aerobounce on 2019/11/18.
 --  Copyright © 2019-present aerobounce. All rights reserved.
 --
+--  配置说明:
+--  所有配置选项都可以在 script-opts/trim.conf 文件中设置
+--  包括远程SSH连接、路径映射、ffmpeg可执行文件路径等
+--
 local utils = require "mp.utils"
 local msg = require "mp.msg"
 local assdraw = require "mp.assdraw"
 
--- ffmpeg path
-if package.config:sub(1, 1) == "/" then
-    -- macOS, *nix
-    ffmpeg_bin = "ffmpeg"
+-- 读取配置选项
+local options = require "mp.options"
+
+-- 默认配置
+local opts = {
+    remote = true,
+    connect_command = "ssh.exe -n nas",
+    local_path_prefix = "Z:\\",
+    remote_path_prefix = "/mnt/tank/",
+    remote_ffmpeg_bin = "ffmpeg",
+    local_ffmpeg_bin_windows = "ffmpeg.exe",
+    local_ffmpeg_bin_unix = "ffmpeg"
+}
+
+-- 读取用户配置
+options.read_options(opts, "trim")
+
+-- 设置ffmpeg路径
+local ffmpeg_bin
+if opts.remote then
+    ffmpeg_bin = opts.remote_ffmpeg_bin
 else
-    -- Windows
-    ffmpeg_bin = "ffmpeg.exe"
+    if package.config:sub(1, 1) == "/" then
+        -- macOS, *nix
+        ffmpeg_bin = opts.local_ffmpeg_bin_unix
+    else
+        -- Windows
+        ffmpeg_bin = opts.local_ffmpeg_bin_windows
+    end
+end
+
+local function replacePath(path)
+    path = path:gsub(opts.local_path_prefix, opts.remote_path_prefix)
+    if mp.get_property("platform") == "windows" then
+        path = path:gsub("\\", "/")
+    end
+    return path
+end
+
+local function remotetable()
+    local result = string.find(mp.get_property_native("path"), opts.local_path_prefix)
+    return result
 end
 
 local isVideoFile = false
@@ -308,6 +347,9 @@ function writeOut()
 
     -- Generate Destination Path
     local destinationPath = generateDestinationPath()
+    if opts.remote and remotetable() then
+        destinationPath = "'" .. replacePath(destinationPath)  ..  "'"
+    end
 
     if (destinationPath == "") then
         message = "trim: Failed to generate destination path."
@@ -318,8 +360,16 @@ function writeOut()
     -- Prepare values
     local trimDuration = endPosition - startPosition
     local sourcePath = mp.get_property_native("path")
+    if opts.remote and remotetable() then
+        sourcePath = "'" .. replacePath(sourcePath) ..  "'"
+    end
 
-    local message = getTrimmingPositionsText() .. "\nWriting out... "
+    local message = getTrimmingPositionsText()
+    if opts.remote and remotetable() then
+        message = message .. "\n[Remote Mode] Writing out via SSH... "
+    else
+        message = message .. "\nWriting out... "
+    end
     mp.set_osd_ass(0, 0, "")
     mp.osd_message(message, 10)
 
@@ -396,8 +446,8 @@ function writeOut()
         "-i", tostring(sourcePath),
         "-t", tostring(trimDuration),
 
-        "-map", "v:0?",
-        "-map", "a:0?",
+        -- "-map", "v:0?",
+        -- "-map", "a:0?",
         "-c", "copy",
 
         strip_metadata ..
@@ -407,9 +457,26 @@ function writeOut()
 
         destinationPath
     }
+    if opts.remote and remotetable() then
+        msg.log("info", "Remote mode detected - executing ffmpeg via SSH on remote server")
+        msg.log("info", "SSH command: " .. opts.connect_command)
+        msg.log("info", "Local path: " .. mp.get_property_native("path"))
+        msg.log("info", "Remote path: " .. replacePath(mp.get_property_native("path")))
+        
+        local argsStr = table.concat(args, " ") 
+        args = {}
+        for word in opts.connect_command:gmatch("%S+") do
+            table.insert(args, word)
+        end
+        table.insert(args, argsStr)
+    end        
 
     -- Print command to console
-    msg.log("info", "Executing ffmpeg command:")
+    if opts.remote and remotetable() then
+        msg.log("info", "Executing remote ffmpeg command via SSH:")
+    else
+        msg.log("info", "Executing local ffmpeg command:")
+    end
     for _, val in pairs(args) do
         msg.log("info", val)
     end
@@ -418,9 +485,8 @@ function writeOut()
     mp.command_native_async({
         name = "subprocess",
         args = args,
-        capture_stdout = true
+        -- capture_stdout = true
     }, function(res, val, err)
-
         if val.status == 1 then
             message = message .. "Failed. Refer console for details."
             msg.log("error", message)
