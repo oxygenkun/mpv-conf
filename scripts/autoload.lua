@@ -1,6 +1,6 @@
 --[[
 SOURCE: https://github.com/mpv-player/mpv/blob/master/TOOLS/lua/autoload.lua
-COMMIT: e7630722d81c1cd36042d0b1368407a92e488742
+COMMIT: 8364b122eed559ec2a80cd4d924df8338519f53b
 --]]
 
 -- This script automatically loads playlist entries before and after the
@@ -198,7 +198,6 @@ local function get_extension(path)
 end
 
 local function is_ignored(file)
-    msg.info("is_ignored: " .. file)
     for pattern in pairs(o.ignore_patterns) do
         if file:match(pattern) then
             return true
@@ -338,7 +337,7 @@ local function find_and_add_entries()
         extensions = EXTENSIONS
     end
     if not extensions then
-        msg.debug("stopping: no matched extentions list")
+        msg.debug("stopping: no matched extensions list")
         return
     end
 
@@ -377,6 +376,9 @@ local function find_and_add_entries()
     for _, entry in ipairs(pl) do
         added_entries[entry.filename] = true
     end
+
+    -- stop initial file from being added twice
+    added_entries[path] = true
 
     local append = {[-1] = {}, [1] = {}}
     for direction = -1, 1, 2 do -- 2 iterations, with direction = -1 and +1
