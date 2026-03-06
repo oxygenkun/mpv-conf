@@ -2,7 +2,19 @@
 
 This is my personal mpv player's configrations. Feel free to use.
 
-## Scripts included:
+# Scripts:
+
+## Personal
+
+### exiftool_auto_lut
+
+Auto load lut when play SONYU s-log videos (using exiftool to detect metadata)
+
+### hold-speed
+
+Hold `s` to speed up playback
+
+## 3rd-part
 
 ### autoload
 
@@ -22,6 +34,19 @@ From: [tomasklaen/uosc](https://github.com/tomasklaen/uosc)
 show **thumbnails** on the progress bar.
 
 From: [po5/thumbfast](https://github.com/po5/thumbfast)
+
+### trim
+
+Cut video without decoding/encoding
+
+From: [aerobounce/trim.lua](https://github.com/aerobounce/trim.lua)
+
+```
+h for start position
+k for end position
+
+duble press h/k for cutting
+```
 
 ### VR-reversal 360plugin
 
@@ -43,24 +68,10 @@ h decrease resolution
 i,k,j,l up,down,left,right
 ```
 
-### trim
+# 一些提升 quality-of-life 技巧
 
-Cut video without decoding/encoding
+[TRICKS](TRICKS.md)
 
-From: [aerobounce/trim.lua](https://github.com/aerobounce/trim.lua)
-
-```
-h for start position
-k for end position
-
-duble press h/k for cutting
-```
-
-### personal miscs
-
--  `helpers.bash`: dvd and bd playing helpers
-
-
-## Reference
+# Reference
 
 - [hooke007/MPV_lazy](https://github.com/hooke007/MPV_lazy) is an easy to use one-step-install config repo, with a doc site including MPV wiki and some config tricks.
