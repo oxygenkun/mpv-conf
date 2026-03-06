@@ -135,6 +135,11 @@ end
 
 -- Check if path is a local file
 local function is_local_file(path)
+    -- Check if it's a URL (http, https, ftp, rtmp, rtsp, etc.)
+    if path:match("^%a+://") then
+        return false
+    end
+    -- Check if it's a local file path (Windows or Unix)
     return path:match("^[A-Za-z]:[/\\]") or path:match("^/")
 end
 
