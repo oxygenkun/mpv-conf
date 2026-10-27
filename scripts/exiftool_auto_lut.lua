@@ -60,12 +60,12 @@ local script_lut_changing = false  -- Flag to prevent detecting script changes a
 
 local lut_mapping = {
     ["s-log3-cine"] = {
-        lut_file = "SLog3SGamut3.CineToLC-709.cube",
+        lut_file = "Neutral A7s3.cube",
         lut_type = "normalized",
         description = "Sony S-Log3 Cine to Rec.709"
     },
     ["s-log3"] = {
-        lut_file = "SLog3SGamut3.CineToLC-709.cube",
+        lut_file = "Neutral A7s3.cube",
         lut_type = "normalized",
         description = "Sony S-Log3 to Rec.709"
     },
